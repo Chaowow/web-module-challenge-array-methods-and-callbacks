@@ -17,6 +17,16 @@ Practice accessing data by console.log-ing the following pieces of data note.
 
 //(e) Winner of 2014 world cup final */
 
+const oneCup = fifaData.filter ((recent) => {
+    return recent.Year === 2014 && recent.Stage === 'Final';
+})
+// console.log(oneCup);
+// console.log(oneCup[0]['Home Team Name']);
+// console.log(oneCup[0]['Away Team Name']);
+// console.log(oneCup[0]['Home Team Goals']);
+// console.log(oneCup[0]['Away Team Goals']);
+// console.log(oneCup[0]['Win conditions']);
+
 
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 2: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 
 Use getFinals to do the following:
@@ -26,9 +36,13 @@ Use getFinals to do the following:
 💡 HINT - you should be looking at the stage key inside of the objects
 */
 
-function getFinals(/* code here */) {
-    /* code here */
+function getFinals(array) {
+    const allFinals = array.filter(function(item){
+        return item.Stage === "Final"
+    })
+    return allFinals;
  }
+//  console.log(getFinals(fifaData));
 
 
 
@@ -38,8 +52,8 @@ Use the higher-order function called getYears to do the following:
 2. Receive a callback function as the second parameter that will take getFinals from task 2 as an argument
 3. Return an array called years containing all of the years in the getFinals data set*/
 
-function getYears(/* code here */) {
-    /* code here */
+function getYears(array, cb) {
+    return cb(array).map(team => team.Year) 
 }
 
 
@@ -52,8 +66,9 @@ Use the higher-order function getWinners to do the following:
 💡 HINT: Don't worry about ties for now (Please see the README file for info on ties for a stretch goal.)
 4. Returns the names of all winning countries in an array called `winners` */ 
 
-function getWinners(/* code here */) {
-    /* code here */
+function getWinners(array, cb) {
+   const winners = cb(array).map(team => team['Home Team Goals'] > team['Away Team Goals'] ? team['Home Team Name'] : team['Away Team Name']);
+   return winners;
 }
 
 
@@ -69,8 +84,10 @@ Use the higher-order function getWinnersByYear to do the following:
 💡 HINT: the strings returned need to exactly match the string in step 4.
  */
 
-function getWinnersByYear(/* code here */) {
-    /* code here */
+function getWinnersByYear(array, gfCb, gyCb, gwCb) {
+    const country = gwCb(array, gfCb);
+    const year = gyCb(array, gfCb);
+    return country.map((item, index)=> `In ${year[index]}, ${item} won the world cup!`)
 }
 
 
@@ -89,9 +106,12 @@ Use the higher order function `getAverageGoals` to do the following:
  
 */
 
-function getAverageGoals(/* code here */) {
-    /* code here */
- }
+function getAverageGoals(getFinalsCb) {
+    const getAverage = getFinalsCb.reduce((acc, currentValue) => {
+        return acc + currentValue['Home Team Goals'] + currentValue['Away Team Goals'];
+    }, 0)
+    return (getAverage / getFinalsCb.length).toFixed(2);
+ };
 
 
 
